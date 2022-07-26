@@ -1,0 +1,10 @@
+{
+  "wrapper": [
+    {"mazeGeneratorType": 0, "width": 35, "height": 35},
+    {"mazeGeneratorType": 1, "width": 45, "height": 45},
+    {"mazeGeneratorType": 2, "width": 55, "height": 55},
+    {"mazeGeneratorType": 2, "width": 65, "height": 65},
+    {"mazeGeneratorType": 2, "width": 75, "height": 75},
+    {"mazeGeneratorType": 2, "width": 85, "height": 85}
+  ]
+}

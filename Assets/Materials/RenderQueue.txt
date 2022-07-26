@@ -1,0 +1,2 @@
+﻿WaroHole.matのRenderQueueを"2001"にしていることに留意。
+このマテリアルを使用しているMeshRendererをwallより上に描画し、スライムより下に描画してほしいため。

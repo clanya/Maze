@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise">
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Game/Maze/BaseMazeGenerator.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Game/Maze/MazeGenerator_Stick.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Game/Player/PlayerController.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Game/Setting.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Game/SingletonMonoBehavior.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Maze/IMazeGenerator.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Maze/MazeGenerator_Stick.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Player/KeySetting.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" charset="windows-31j" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Setting.cs" charset="windows-31j" />
+  </component>
+</project>

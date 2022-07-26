@@ -1,0 +1,6 @@
+Copyright notice
+SE
+SE_01:魔王魂 効果音 システム10	https://maou.audio/se_system10/
+SE_02:スライム的な_2		https://dova-s.jp/se/play1193.html
+
+SE_02は権利の関係でAeest内から削除して公開しています。
