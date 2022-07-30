@@ -22,8 +22,6 @@ namespace Game.Presenter
         [SerializeField] private List<LevelButtonView> levelButtonViewList  = new List<LevelButtonView>();
 
         private readonly List<LevelButton> levelButtonList = new List<LevelButton>();
-        private readonly List<MazeLevel> mazeLevelList = new List<MazeLevel>();
-        private const string DataPath = "MazeGeneratorParameterData";
     
         private void Awake()
         {
@@ -34,30 +32,11 @@ namespace Game.Presenter
         //参照：https://takap-tech.com/entry/2021/02/02/222406
         private void Init()
         {
-            foreach (var levelButtonView in levelButtonViewList)
-            {
-                levelButtonView.GetComponent<Button>().enabled = true;
-            }
-            
-            //Level情報を受け取り、mazeLevelListに格納。
-            foreach (var mazeLevel in TryGetMazeLevelData())
-            {
-                if (mazeLevel.width < 0)
-                {
-                    throw new Exception($"invalid width: {mazeLevel.width}");
-                }
-
-                if (mazeLevel.height < 0)
-                {
-                    throw new Exception($"invalid height: {mazeLevel.height}");
-                }
-
-                mazeLevelList.Add(mazeLevel);
-            }
-
+            ActivateAllButton(true);
 
             //mazeLevelList（Model(LevelButtonクラス型List)）にindexで対応づくようにmazeLevelを追加する。
-            foreach (var mazeLevel in mazeLevelList)
+            var dataLoader = new MazeDataLoader();
+            foreach (var mazeLevel in dataLoader.LoadMazeLevelList())
             {
                 levelButtonList.Add(new LevelButton(mazeLevel));
             }
@@ -65,42 +44,24 @@ namespace Game.Presenter
             //それぞれのUIは自身が持っているパラメータを元にシーン遷移。index使いたいのでfor文。
             for (int i = 0; i < levelButtonViewList.Count; i++)
             {
-                var tmp = levelButtonList[i];
-                var tmp2 = levelButtonViewList[i];
-                levelButtonViewList[i].GetComponent<Button>().OnClickAsObservable()
+                var level = levelButtonList[i];
+                var buttonView = levelButtonViewList[i];
+                buttonView.Push() 
                     .Subscribe(async _ =>
                     {
-                        LockButtons();
-                        // var token = new CancellationToken();
+                        ActivateAllButton(false);
                         AudioManager.Instance.Play(AudioType.se_01);
-                        await tmp2.Animation(this.GetCancellationTokenOnDestroy());
-                        tmp.MoveGameScene();
+                        await buttonView.Animation(this.GetCancellationTokenOnDestroy());
+                        level.MoveGameScene();
                     }).AddTo(this);
             }
         }
 
-        //Memo: この処理の仕方問題ありそう。nullが見つけにくいとか。
-        private MazeLevel[] TryGetMazeLevelData()
+        private void ActivateAllButton(bool value)
         {
-            //JsonからLevel情報を読み込むのをtryする。
-            try
+            foreach (var buttonView in levelButtonViewList)
             {
-                var dataFile = Resources.Load<TextAsset>(DataPath);
-                var levelTable = JsonUtility.FromJson<MazeLevelTable>(dataFile.ToString());
-                return levelTable.data_table;
-            }
-            catch(Exception e)
-            {
-                throw new Exception($"data load error: {e}");
-            }
-        }
-
-        private void LockButtons()
-        {
-            foreach(var button in levelButtonViewList)
-            {
-                //button.GetComponent<Button>().interactable = false;
-                button.GetComponent<Button>().enabled = false;
+                buttonView.Activate(value);
             }
         }
     }
