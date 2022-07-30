@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -40,7 +41,17 @@ namespace Game.Audio
 
         private AudioClip FindAudioClip(AudioType type)
         {
-            return audioDatas.Find(x => x.Type == type).Clip;
+            var data = audioDatas.Find(x => x.Type == type);
+            if (data == null)
+            {
+                throw new Exception($"audio data is null. (type: {type})");
+            }
+
+            if (data.Clip == null)
+            {
+                throw new Exception($"audio clip is null. (type: {type})");
+            }
+            return data.Clip;
         }
     }
 }
