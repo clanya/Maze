@@ -4,6 +4,12 @@ using Maze;
 namespace Game.Maze
 {
     [Serializable]
+    public class MazeLevelTable
+    {
+        public MazeLevel[] data_table;
+    }
+    
+    [Serializable]
     public struct MazeLevel
     {
         public MazeGeneratorType mazeGeneratorType;

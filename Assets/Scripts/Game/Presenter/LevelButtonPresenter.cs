@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Audio;
 using Game.Maze;
@@ -25,7 +23,7 @@ namespace Game.Presenter
 
         private readonly List<LevelButton> levelButtonList = new List<LevelButton>();
         private readonly List<MazeLevel> mazeLevelList = new List<MazeLevel>();
-        private const string DataPath = @"Assets/Resources/MazeGeneratorParameterData.json";
+        private const string DataPath = "MazeGeneratorParameterData";
     
         private void Awake()
         {
@@ -44,6 +42,16 @@ namespace Game.Presenter
             //Level情報を受け取り、mazeLevelListに格納。
             foreach (var mazeLevel in TryGetMazeLevelData())
             {
+                if (mazeLevel.width < 0)
+                {
+                    throw new Exception($"invalid width: {mazeLevel.width}");
+                }
+
+                if (mazeLevel.height < 0)
+                {
+                    throw new Exception($"invalid height: {mazeLevel.height}");
+                }
+
                 mazeLevelList.Add(mazeLevel);
             }
 
@@ -77,25 +85,16 @@ namespace Game.Presenter
             //JsonからLevel情報を読み込むのをtryする。
             try
             {
-                using (StreamReader file = new StreamReader(DataPath))
-                {
-                    string dataString = file.ReadToEnd();
-                    MazeLevelWrapper mazeLevelWrapper = JsonUtility.FromJson<MazeLevelWrapper>(dataString);
-                    return mazeLevelWrapper.wrapper;
-                }
+                var dataFile = Resources.Load<TextAsset>(DataPath);
+                var levelTable = JsonUtility.FromJson<MazeLevelTable>(dataFile.ToString());
+                return levelTable.data_table;
             }
             catch(Exception e)
             {
-                Debug.LogError(e);
+                throw new Exception($"data load error: {e}");
             }
-            return null;
         }
-        
-        private class MazeLevelWrapper
-        {
-            public MazeLevel[] wrapper;
-        }
-    
+
         private void LockButtons()
         {
             foreach(var button in levelButtonViewList)
