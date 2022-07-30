@@ -18,7 +18,7 @@ namespace Game.Model
         
         public async UniTaskVoid MoveScene(string nextSceneName,CancellationToken token)
         {
-            await AudioManager.Instance.Play(AudioType.se_01,token);
+            await AudioManager.Instance.PlayAsync(AudioType.se_01,token);
             SceneManager.LoadScene(nextSceneName);
         }
     }

@@ -25,7 +25,7 @@ namespace Game.Audio
             audioSource.Play();
         }
 
-        public async UniTask Play(AudioType type,CancellationToken token)
+        public async UniTask PlayAsync(AudioType type,CancellationToken token)
         {
             AudioClip audioClip = FindAudioClip(type);
             audioSource.clip = audioClip;
