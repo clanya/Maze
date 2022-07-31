@@ -8,7 +8,8 @@ namespace Game.Maze
     public class MazeGeneratorManager : MonoBehaviour
     {
         private BaseMazeGenerator baseMazeGenerator;
-        [NonSerialized] public MazeLevel mazeLevel;
+        [NonSerialized] public MazeLevelModel mazeLevelModel;
+        private MazeLevel mazeLevel;
         public int[,] maze { get; private set; }
         [SerializeField] private GameObject wallPrefab;
         [SerializeField] private GameObject floorPrefab;
@@ -18,6 +19,8 @@ namespace Game.Maze
         /// </summary>
         public void Init()
         {
+            var dataLoader = new MazeDataLoader();
+            mazeLevel = dataLoader.FindMazeLevel(mazeLevelModel);
             maze = new int[mazeLevel.width, mazeLevel.height];
             GenerateMaze();
         }

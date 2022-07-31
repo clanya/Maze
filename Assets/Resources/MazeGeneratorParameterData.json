@@ -1,5 +1,5 @@
 {
-  "wrapper": [
+  "data_table": [
     {"mazeGeneratorType": 0, "width": 35, "height": 35},
     {"mazeGeneratorType": 1, "width": 45, "height": 45},
     {"mazeGeneratorType": 2, "width": 55, "height": 55},

@@ -10,7 +10,6 @@ namespace Game.Player
         private IPlayerInputter playerInputter;
         private PlayerMover playerMover;
         private Animator playerAnimator;
-        private bool isIdle;
 
         private Vector3 positionBuffer;
         // private GameObject warpHoleGameObject;
@@ -30,44 +29,21 @@ namespace Game.Player
         {
             if (GameSceneDirector.Instance.IsFinished)
             {
-                playerAnimator.SetBool(PlayerAnimatorFrag.isClear.ToString(),true);
+                playerAnimator.SetBool(PlayerAnimatorFrag.isClear.ConvertToStringType(),true);
                 return;
             }
 
-            isIdle = false;
             playerAnimator.SetBool(PlayerAnimatorFrag.isUpward.ConvertToStringType(),playerInputter.MoveUpward());
             playerAnimator.SetBool(PlayerAnimatorFrag.isDownward.ConvertToStringType(),playerInputter.MoveDownward());
             playerAnimator.SetBool(PlayerAnimatorFrag.isRight.ConvertToStringType(),playerInputter.MoveRight());
             playerAnimator.SetBool(PlayerAnimatorFrag.isLeft.ConvertToStringType(),playerInputter.MoveLeft());
-            playerAnimator.SetBool(PlayerAnimatorFrag.isIdle.ConvertToStringType(),isIdle);
-            
-            if (playerInputter.MoveUpward())
-            {
-                playerMover.WalkUpward();
-            }
-            else if (playerInputter.MoveDownward())
-            {
-                playerMover.WalkDownward();
-            }
-            else if (playerInputter.MoveRight())
-            {
-                playerMover.WalkRight();
-            }
-            else if (playerInputter.MoveLeft())
-            {
-                playerMover.WalkLeft();
-            }
-            else
-            {
-                isIdle = true;
-                playerAnimator.SetBool(PlayerAnimatorFrag.isIdle.ToString(),true);
-                playerMover.Idle();
-            }
+            playerAnimator.SetBool(PlayerAnimatorFrag.isIdle.ConvertToStringType(),playerInputter.IsIdle());
+            playerMover.Move(playerInputter.GetMoveType());
 
             //このままだとPause()を呼ばれたときに区別がつかない。
             //前フレームと比較して動いていたら音を鳴らす。
             //Memo:公開用はAudioType.se_02を削除しているのでコメントアウト
-            if (!isIdle && !AudioManager.Instance.audioSource.isPlaying && transform.position != positionBuffer)
+            if (!playerInputter.IsIdle() && !AudioManager.Instance.audioSource.isPlaying && transform.position != positionBuffer)
             {
                 // AudioManager.Instance.Play(AudioType.se_02);
             }
