@@ -6,11 +6,11 @@ namespace Game.Model
 {
     public sealed class LevelButton
     {
-        private readonly MazeLevel mazeLevel;
+        private readonly MazeLevelModel mazeLevelModel;
         private const string GameObjectName = "GameSceneDirector";
-        public LevelButton(MazeLevel mazeLevel)
+        public LevelButton(MazeLevelModel mazeLevelModel)
         {
-            this.mazeLevel = mazeLevel;
+            this.mazeLevelModel = mazeLevelModel;
         }
         public void MoveGameScene()
         {
@@ -22,7 +22,7 @@ namespace Game.Model
         {
             SceneManager.sceneLoaded -= SetParameter;
             var mazeGeneratorManager = GameObject.Find(GameObjectName).GetComponent<MazeGeneratorManager>();
-            mazeGeneratorManager.mazeLevel = mazeLevel;
+            mazeGeneratorManager.mazeLevelModel = mazeLevelModel;
         }
     }
 }

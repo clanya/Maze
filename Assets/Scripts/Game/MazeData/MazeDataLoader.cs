@@ -6,33 +6,12 @@ namespace Game.Maze
 {
     public sealed class MazeDataLoader
     {
-        private readonly List<MazeLevel> mazeLevelList;
+        private readonly MazeLevel[] mazeLevelList;
         private const string DataPath = "MazeGeneratorParameterData";
 
         public MazeDataLoader()
         {
-            mazeLevelList = new List<MazeLevel>();
-        }
-
-        public List<MazeLevel> LoadMazeLevelList()
-        {
-            //Level情報を受け取り、mazeLevelListに格納。
-            foreach (var mazeLevel in TryGetMazeLevelData())
-            {
-                if (mazeLevel.width < 0)
-                {
-                    throw new Exception($"invalid width: {mazeLevel.width}");
-                }
-
-                if (mazeLevel.height < 0)
-                {
-                    throw new Exception($"invalid height: {mazeLevel.height}");
-                }
-
-                mazeLevelList.Add(mazeLevel);
-            }
-
-            return mazeLevelList;
+            mazeLevelList = TryGetMazeLevelData();
         }
 
         //Memo: この処理の仕方問題ありそう。nullが見つけにくいとか。
@@ -48,6 +27,30 @@ namespace Game.Maze
             catch (Exception e)
             {
                 throw new Exception($"data load error: {e}");
+            }
+        }
+
+        public MazeLevel FindMazeLevel(MazeLevelModel levelModel)
+        {
+            try
+            {
+                var mazeLevel = mazeLevelList[levelModel.mazeLevel];
+
+                if (mazeLevel.width < 0)
+                {
+                    throw new Exception($"invalid width: {mazeLevel.width}");
+                }
+
+                if (mazeLevel.height < 0)
+                {
+                    throw new Exception($"invalid height: {mazeLevel.height}");
+                }
+
+                return mazeLevel;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"find maze error: {e}");
             }
         }
     }

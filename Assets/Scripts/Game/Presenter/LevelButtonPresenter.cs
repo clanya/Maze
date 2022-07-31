@@ -21,8 +21,6 @@ namespace Game.Presenter
         //適切でないように思う。
         [SerializeField] private List<LevelButtonView> levelButtonViewList  = new List<LevelButtonView>();
 
-        private readonly List<LevelButton> levelButtonList = new List<LevelButton>();
-    
         private void Awake()
         {
             Init();
@@ -34,17 +32,10 @@ namespace Game.Presenter
         {
             ActivateAllButton(true);
 
-            //mazeLevelList（Model(LevelButtonクラス型List)）にindexで対応づくようにmazeLevelを追加する。
-            var dataLoader = new MazeDataLoader();
-            foreach (var mazeLevel in dataLoader.LoadMazeLevelList())
-            {
-                levelButtonList.Add(new LevelButton(mazeLevel));
-            }
-
             //それぞれのUIは自身が持っているパラメータを元にシーン遷移。index使いたいのでfor文。
             for (int i = 0; i < levelButtonViewList.Count; i++)
             {
-                var level = levelButtonList[i];
+                var level = new LevelButton(new MazeLevelModel(i));
                 var buttonView = levelButtonViewList[i];
                 buttonView.Push() 
                     .Subscribe(async _ =>
