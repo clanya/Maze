@@ -10,7 +10,8 @@ namespace Game.Player
         public bool MoveRight();
         public bool MoveLeft();
         public bool IsRunning();
-
+        public bool IsIdle();
+        public MoveType GetMoveType();
     }
 }
 
