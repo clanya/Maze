@@ -4,13 +4,13 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Model
 {
-    public sealed class LevelButton
+    public sealed class LevelButtonModel
     {
-        private readonly MazeLevel mazeLevel;
+        private readonly MazeLevelModel mazeLevelModel;
         private const string GameObjectName = "GameSceneDirector";
-        public LevelButton(MazeLevel mazeLevel)
+        public LevelButtonModel(MazeLevelModel mazeLevelModel)
         {
-            this.mazeLevel = mazeLevel;
+            this.mazeLevelModel = mazeLevelModel;
         }
         public void MoveGameScene()
         {
@@ -22,7 +22,7 @@ namespace Game.Model
         {
             SceneManager.sceneLoaded -= SetParameter;
             var mazeGeneratorManager = GameObject.Find(GameObjectName).GetComponent<MazeGeneratorManager>();
-            mazeGeneratorManager.mazeLevel = mazeLevel;
+            mazeGeneratorManager.mazeLevelModel = mazeLevelModel;
         }
     }
 }

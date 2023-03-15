@@ -7,17 +7,22 @@ namespace Game.Maze
 {
     public class MazeGeneratorManager : MonoBehaviour
     {
-        private BaseMazeGenerator baseMazeGenerator;
-        [NonSerialized] public MazeLevel mazeLevel;
+        private IMazeGeneratorable mazeGenerator;
+        [NonSerialized] public MazeLevelModel mazeLevelModel;
+        private MazeLevel mazeLevel;
         public int[,] maze { get; private set; }
         [SerializeField] private GameObject wallPrefab;
         [SerializeField] private GameObject floorPrefab;
+        [SerializeField] private Transform parent;
+        
 
         /// <summary>
         /// SceneManager.sceneLoadedでデータを渡してから初期化したいので、AwakeではなくStartで初期化。
         /// </summary>
         public void Init()
         {
+            var dataLoader = new MazeDataLoader();
+            mazeLevel = dataLoader.FindMazeLevel(mazeLevelModel);
             maze = new int[mazeLevel.width, mazeLevel.height];
             GenerateMaze();
         }
@@ -27,16 +32,16 @@ namespace Game.Maze
             switch (mazeLevel.mazeGeneratorType)
             {
                 case MazeGeneratorType.Stick:
-                    baseMazeGenerator = new MazeGenerator_Stick(maze);
+                    mazeGenerator = new MazeGenerator_Stick(maze);
                     break;
                 case MazeGeneratorType.Wall:
-                    baseMazeGenerator = new MazeGenerator_Wall(maze);
+                    mazeGenerator = new MazeGenerator_Wall(maze);
                     break;
                 case MazeGeneratorType.Hole:
-                    baseMazeGenerator = new MazeGenerator_Hole(maze);
+                    mazeGenerator = new MazeGenerator_Hole(maze);
                     break;
             }
-            baseMazeGenerator.GenerateMaze();
+            mazeGenerator.GenerateMaze();
             
             for (int x = 0; x < mazeLevel.width; x ++)
             {
@@ -44,11 +49,11 @@ namespace Game.Maze
                 {
                     if (maze[x, y] == MazeConfig.Wall)
                     {
-                        Instantiate(wallPrefab, new Vector3(x,y,0),Quaternion.identity);
+                        Instantiate(wallPrefab, new Vector3(x,y,0),Quaternion.identity,parent);
                     }
                     else if (maze[x, y] == MazeConfig.Path)
                     {
-                        Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity);
+                        Instantiate(floorPrefab, new Vector3(x, y, 0), Quaternion.identity,parent);
                     }
                 }
             }

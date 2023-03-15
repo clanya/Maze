@@ -9,7 +9,7 @@ using AudioType = Game.Audio.AudioType;
 
 namespace Game.Model
 {
-    public sealed class MoveSceneButton
+    public sealed class MoveSceneButtonModel
     {
         public void MoveScene(string nextSceneName)
         {
@@ -18,7 +18,7 @@ namespace Game.Model
         
         public async UniTaskVoid MoveScene(string nextSceneName,CancellationToken token)
         {
-            await AudioManager.Instance.Play(AudioType.se_01,token);
+            await AudioManager.Instance.PlayAsync(AudioType.se_01,token);
             SceneManager.LoadScene(nextSceneName);
         }
     }

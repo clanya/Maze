@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Game.Maze
 {
     //Reference: https://algoful.com/Archive/Algorithm/MazeBar
-    public class MazeGenerator_Stick : BaseMazeGenerator
+    public class MazeGenerator_Stick : IMazeGeneratorable
     {
         private readonly int[,] maze;
         private readonly int width;
@@ -18,26 +18,33 @@ namespace Game.Maze
             Debug.Assert(height % 2 == 1 && width % 2 == 1,"Set the argument to an odd number!!");
             Debug.Assert(width > MazeConfig.MinimumValue && height > MazeConfig.MinimumValue,"Set the argument to a number greater than minimum value(5)");
         }
-
-        private MazeGenerator_Stick() { }
         
-        public override void GenerateMaze()
+        public void GenerateMaze()
         {
             // if (width % 2 == 0 || height % 2 == 0) Debug.LogError("Set the argument to an odd number!!");
             // if (width < MinimumValue || height < MinimumValue) Debug.LogError("Set the argument to a number greater than minimum value(5)");
-            //ŠO•Ç‚ð•Ç‚É‚·‚é
+            //å¤–å£ã‚’å£ã«ã™ã‚‹
             for (int x = 0; x < width; x++)
+            {
                 for (int y = 0; y < height; y++)
+                {
                     if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
+                    {
                         maze[x, y] = MazeConfig.Wall;
+                    }
                     else
+                    {
                         maze[x, y] = MazeConfig.Path;
+                    }
+                }
+            }
 
-            //–_‚ð—§‚ÄA“|‚·
+
+            //æ£’ã‚’ç«‹ã¦ã€å€’ã™
             var rnd = new System.Random();
             for(int x = 2;x < width - 1;x += 2)
             {
-                for(int y = 2;y < height -1;y += 2)
+                for(int y = 2;y < height - 1;y += 2)
                 {
                     maze[x, y] = MazeConfig.Wall;
 
@@ -49,7 +56,7 @@ namespace Game.Maze
                         else 
                             direction = rnd.Next(3);
 
-                        //–_‚ð“|‚·•ûŒü‚ðŒˆ‚ß‚é
+                        //æ£’ã‚’å€’ã™æ–¹å‘ã‚’æ±ºã‚ã‚‹
                         int wallX = x;
                         int wallY = y;
                         switch (direction)

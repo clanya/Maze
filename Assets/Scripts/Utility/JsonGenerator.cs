@@ -4,13 +4,17 @@ using UnityEngine;
 
 namespace Utility
 {
+    /// <summary>
+    /// Debug用で雑にデータを作成するために使用する。
+    /// </summary>
     public sealed class JsonGenerator : MonoBehaviour
     {
         private MazeGeneratorParameter mazeGeneratorParameter = new MazeGeneratorParameter();
-
+        private const int DataCount = 10;                                                               //生成したいデータ数
+        private const string GeneratedJsonPath = "Assets/Resources/MazeGeneratorParameterData.json";    //生成させるパス
         private void Awake()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < DataCount; i++)
             {
                 MazeGeneratorType mazeGeneratorType = MazeGeneratorType.Stick;
                 switch (i%3)
@@ -23,13 +27,12 @@ namespace Utility
                         break;
                 }
                 mazeGeneratorParameter.mazeGeneratorTypes.Add(mazeGeneratorType);
-                mazeGeneratorParameter.widths.Add(35 + i*10);
-                mazeGeneratorParameter.heights.Add(35 + i*10);
+                mazeGeneratorParameter.widths.Add(35 + i * DataCount);
+                mazeGeneratorParameter.heights.Add(35 + i * DataCount);
             }
 
             string json = JsonUtility.ToJson(mazeGeneratorParameter);
-            string jsonPath = "Assets/Resources/MazeGeneratorParameterData.json";
-            File.WriteAllText(jsonPath, json);
+            File.WriteAllText(GeneratedJsonPath, json);
         }
     }
 }

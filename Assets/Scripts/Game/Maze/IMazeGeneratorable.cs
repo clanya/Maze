@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Maze
 {
-    public abstract class BaseMazeGenerator
+    public interface IMazeGeneratorable
     {
-        public abstract void GenerateMaze();
+        public void GenerateMaze();
     }
 }
 

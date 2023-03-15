@@ -5,8 +5,8 @@ namespace Utility
 {
     public class Setting : MonoBehaviour
     {
-        [SerializeField] private Canvas _canvas = null;
-        public bool clickedEsc => Input.GetKeyDown(KeyCode.Escape);
+        [SerializeField] private Canvas _canvas;
+        private bool clickedEsc => Input.GetKeyDown(KeyCode.Escape);
 
         private void Awake()
         {
@@ -20,7 +20,6 @@ namespace Utility
             {
                 _canvas.enabled = true;
             }
-
         }
 
         public void QuitGame()

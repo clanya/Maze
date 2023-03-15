@@ -5,7 +5,7 @@ using Maze;
 //Reference: https://algoful.com/Archive/Algorithm/MazeExtend
 namespace Game.Maze
 {
-    class MazeGenerator_Wall : BaseMazeGenerator
+    class MazeGenerator_Wall : IMazeGeneratorable
     {
         private readonly int[,] maze;
         private readonly int width;
@@ -21,11 +21,8 @@ namespace Game.Maze
             Debug.Assert(width > MazeConfig.MinimumValue && height > MazeConfig.MinimumValue,"Set the argument to a number greater than minimum value(5)");
         }
 
-        private MazeGenerator_Wall() { }
-
-        public override void GenerateMaze()
+        public void GenerateMaze()
         {
-            UnityEngine.Debug.Log("<color=yellow>Wall!!</color>");
             ReadyToGenerateMaze();
             GetCandidateStartingCoordinates();
             DecideValue();

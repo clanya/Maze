@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Utility
@@ -10,14 +9,14 @@ namespace Utility
         {
             get
             {
-                if (instance == null)
+                if (instance is null)
                 {
-                    Type t = typeof(T);
+                    var t = typeof(T);
 
                     instance = (T)FindObjectOfType(t);
-                    if (instance == null)
+                    if (instance is null)
                     {
-                        Debug.LogError(t + " ���A�^�b�`���Ă���GameObject�͂���܂���");
+                        Debug.LogWarning(t + " をアタッチしているGameObjectはありません");
                     }
                 }
 
@@ -27,18 +26,15 @@ namespace Utility
 
         virtual protected void Awake()
         {
-            // ����GameObject�ɃA�^�b�`����Ă��邩���ׂ�.
-            // �A�^�b�`����Ă���ꍇ�͔j������.
             if (this != Instance)
             {
-                Destroy(this);
-                //Destroy(this.gameObject);
-                Debug.LogError(
+                Destroy(gameObject);
+                Debug.LogWarning(
                     typeof(T) +
-                    " �͊��ɑ���GameObject�ɃA�^�b�`����Ă��邽�߁A�R���|�[�l���g��j�����܂���." +
-                    " �A�^�b�`����Ă���GameObject�� " + Instance.gameObject.name + " �ł�.");
+                    " は既に他のGameObjectにアタッチされているため、コンポーネントを破棄しました." +
+                    " アタッチされているGameObjectは " + Instance.gameObject.name + " です.");
             }
+            DontDestroyOnLoad(gameObject);
         }
-
     }
 }

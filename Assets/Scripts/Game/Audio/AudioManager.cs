@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Game.Audio
     [RequireComponent(typeof(AudioSource))]
     public class AudioManager : SingletonMonoBehaviour<AudioManager>
     {
-        [SerializeField] private List<AudioData> audioDatas;
+        [SerializeField] private List<AudioData> audioDataList;
         public AudioSource audioSource { get; private set; }
 
         private void Start()
@@ -17,16 +18,16 @@ namespace Game.Audio
             audioSource = GetComponent<AudioSource>();
         }
 
-        public void Play(AudioType type)
+        public void PlayAsync(AudioType type)
         {
-            AudioClip audioClip = FindAudioClip(type);
+            var audioClip = FindAudioClip(type);
             audioSource.clip = audioClip;
             audioSource.Play();
         }
 
-        public async UniTask Play(AudioType type,CancellationToken token)
+        public async UniTask PlayAsync(AudioType type,CancellationToken token)
         {
-            AudioClip audioClip = FindAudioClip(type);
+            var audioClip = FindAudioClip(type);
             audioSource.clip = audioClip;
             audioSource.Play();
             await UniTask.WaitUntil(() => audioSource.isPlaying == false, cancellationToken: token);
@@ -40,7 +41,18 @@ namespace Game.Audio
 
         private AudioClip FindAudioClip(AudioType type)
         {
-            return audioDatas.Find(x => x.Type == type).Clip;
+            var data =  audioDataList.Find(x => x.Type == type);
+            if (data is null)
+            {
+                throw new Exception($"Audio data is null. (type: {type})");
+            }
+
+            if (data.Clip is null)
+            {
+                throw new Exception($"Audio clip is null. (type: {type})");
+            }
+
+            return data.Clip;
         }
     }
 }

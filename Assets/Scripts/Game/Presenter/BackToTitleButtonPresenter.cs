@@ -12,7 +12,7 @@ namespace Game.Presenter
     public sealed class BackToTitleButtonPresenter : MonoBehaviour
     {
         [SerializeField] private Button button;
-        private readonly MoveSceneButton moveSceneButton = new MoveSceneButton();
+        private readonly MoveSceneButtonModel moveSceneButtonModel = new MoveSceneButtonModel();
         private const float MaxSize = 1.1f;
         private const int DelaySpan = 100;
         private const float Speed = 0.02f;
@@ -25,14 +25,13 @@ namespace Game.Presenter
                 .Subscribe( async _ =>
                 {
                     button.interactable = false;
-                    AudioManager.Instance.Play(AudioType.se_01);
-                    await Animation(token);
-                    moveSceneButton.MoveScene(SceneName.TitleSceneName);
-                    // moveSceneButton.MoveScene(SceneName.TitleSceneName, token).Forget();
+                    AudioManager.Instance.PlayAsync(AudioType.se_01);
+                    await AnimationAsync(token);
+                    moveSceneButtonModel.MoveScene(SceneName.TitleSceneName);
                 }).AddTo(this);
         }
-        
-        public async UniTask Animation(CancellationToken token)
+
+        private async UniTask AnimationAsync(CancellationToken token)
         {
             var rectTransform = button.GetComponent<RectTransform>();
             while (rectTransform.localScale.y <= MaxSize)

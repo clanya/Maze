@@ -4,13 +4,14 @@ using Maze;
 
 namespace Game.Maze
 {
-    public class MazeGenerator_Hole : BaseMazeGenerator
+    public class MazeGenerator_Hole : IMazeGeneratorable
     {
         private readonly int[,] maze;
         private readonly int width;
         private readonly int height;
         private List<(int x, int y)> candidateStartingCoordinates = new List<(int, int)>();
 
+        
         public MazeGenerator_Hole(int[,] maze)
         {
             this.maze = maze;
@@ -20,11 +21,8 @@ namespace Game.Maze
             Debug.Assert(width > MazeConfig.MinimumValue && height > MazeConfig.MinimumValue,"Set the argument to a number greater than minimum value(5)");
         }
         
-        private MazeGenerator_Hole(){ }
-
-        public override void GenerateMaze()
+        public void GenerateMaze()
         {
-            UnityEngine.Debug.Log($"Hole width:{width},height{height}");
             ReadyToGenerateMaze();
             GetCandidateStartingCoordinates();
             DecideValue();

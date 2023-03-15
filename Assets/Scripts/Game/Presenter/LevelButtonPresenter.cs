@@ -22,86 +22,37 @@ namespace Game.Presenter
         //LockButtons()を各モデルで定義するのは、それぞれのモデルが他のモデルの情報を知ることになるため
         //適切でないように思う。
         [SerializeField] private List<LevelButtonView> levelButtonViewList  = new List<LevelButtonView>();
-
-        private readonly List<LevelButton> levelButtonList = new List<LevelButton>();
-        private readonly List<MazeLevel> mazeLevelList = new List<MazeLevel>();
-        private const string DataPath = @"Assets/Resources/MazeGeneratorParameterData.json";
-    
+        
         private void Awake()
         {
             Init();
         }
 
-        //JsonUtilityが生の配列を扱うことができないので、とりあえずダミーのclassでラップしたが、拡張メソッドなりで実装したほうがいいだろう。
-        //参照：https://takap-tech.com/entry/2021/02/02/222406
         private void Init()
         {
-            foreach (var levelButtonView in levelButtonViewList)
-            {
-                levelButtonView.GetComponent<Button>().enabled = true;
-            }
+            ActivateAllButton(true);
             
-            //Level情報を受け取り、mazeLevelListに格納。
-            foreach (var mazeLevel in TryGetMazeLevelData())
-            {
-                mazeLevelList.Add(mazeLevel);
-            }
-
-
-            //mazeLevelList（Model(LevelButtonクラス型List)）にindexで対応づくようにmazeLevelを追加する。
-            foreach (var mazeLevel in mazeLevelList)
-            {
-                levelButtonList.Add(new LevelButton(mazeLevel));
-            }
-
             //それぞれのUIは自身が持っているパラメータを元にシーン遷移。index使いたいのでfor文。
             for (int i = 0; i < levelButtonViewList.Count; i++)
             {
-                var tmp = levelButtonList[i];
-                var tmp2 = levelButtonViewList[i];
-                levelButtonViewList[i].GetComponent<Button>().OnClickAsObservable()
+                var level = new LevelButtonModel(new MazeLevelModel(i));
+                var buttonView = levelButtonViewList[i];
+                buttonView.ClickObservable() 
                     .Subscribe(async _ =>
                     {
-                        LockButtons();
-                        // var token = new CancellationToken();
-                        AudioManager.Instance.Play(AudioType.se_01);
-                        await tmp2.Animation(this.GetCancellationTokenOnDestroy());
-                        tmp.MoveGameScene();
+                        ActivateAllButton(false);
+                        AudioManager.Instance.PlayAsync(AudioType.se_01);
+                        await buttonView.AnimationAsync(this.GetCancellationTokenOnDestroy());
+                        level.MoveGameScene();
                     }).AddTo(this);
             }
         }
 
-        //Memo: この処理の仕方問題ありそう。nullが見つけにくいとか。
-        private MazeLevel[] TryGetMazeLevelData()
+        private void ActivateAllButton(bool value)
         {
-            //JsonからLevel情報を読み込むのをtryする。
-            try
+            foreach (var buttonView in levelButtonViewList)
             {
-                using (StreamReader file = new StreamReader(DataPath))
-                {
-                    string dataString = file.ReadToEnd();
-                    MazeLevelWrapper mazeLevelWrapper = JsonUtility.FromJson<MazeLevelWrapper>(dataString);
-                    return mazeLevelWrapper.wrapper;
-                }
-            }
-            catch(Exception e)
-            {
-                Debug.LogError(e);
-            }
-            return null;
-        }
-        
-        private class MazeLevelWrapper
-        {
-            public MazeLevel[] wrapper;
-        }
-    
-        private void LockButtons()
-        {
-            foreach(var button in levelButtonViewList)
-            {
-                //button.GetComponent<Button>().interactable = false;
-                button.GetComponent<Button>().enabled = false;
+                buttonView.Activate(value);
             }
         }
     }
